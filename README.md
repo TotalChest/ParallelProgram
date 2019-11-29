@@ -5,7 +5,7 @@ Parallelizing program with OpneMP and MPI on BlueGene and Polus supercomputers
 $ gcc original.c -o original
 $ ./original
 ```
-### Sequence:
+### Parallel:
 ```bash
 $ export OMP_NUM_THREADS=$1    # $1 = 1/2/4/8/32/64/128  
 $ gcc OpenMP-first.c -o first -fopenmp
