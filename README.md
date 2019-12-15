@@ -1,5 +1,6 @@
 # Program-Parallelization
-Parallelizing program with OpneMP and MPI on BlueGene and Polus supercomputers  
+Parallelizing program with OpneMP and MPI on BlueGene and Polus supercomputers    
+You can run OpenMp programms on your computer
 ### Sequence:
 ```bash
 $ gcc original.c -o original
