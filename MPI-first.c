@@ -70,7 +70,7 @@ void kernel_seidel_2d(int tsteps,
 	int i, j, k, process_per_iteration;
 
 	MPI_Comm_size(MPI_COMM_WORLD, &ranksize);
-    MPI_Comm_rank(MPI_COMM_WORLD, &id);
+    	MPI_Comm_rank(MPI_COMM_WORLD, &id);
 	MPI_Barrier(MPI_COMM_WORLD);
 
 	int iterations = (tsteps % ranksize ==0) ? (int)(tsteps / ranksize) : (int)(tsteps / ranksize + 1);
