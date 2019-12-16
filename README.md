@@ -1,6 +1,6 @@
 # Program-Parallelization
 Parallelizing program with OpneMP and MPI on BlueGene and Polus supercomputers    
-You can run OpenMp programms on your computer
+You can run OpenMp programs on your computer. The program itself displays the execution time of the algorithm
 ### Sequence:
 ```bash
 $ gcc original.c -o original
