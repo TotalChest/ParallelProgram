@@ -7,71 +7,55 @@ double bench_t_start, bench_t_end;
 int ranksize, id;
 MPI_Status status;
 
-static
-double rtclock()
-{
+static double rtclock() {
     struct timeval Tp;
     int stat;
     stat = gettimeofday (&Tp, NULL);
     if (stat != 0)
-      printf ("Error return from gettimeofday: %d", stat);
+        printf ("Error return from gettimeofday: %d", stat);
     return (Tp.tv_sec + Tp.tv_usec * 1.0e-6);
 }
 
-void bench_timer_start()
-{
-  bench_t_start = rtclock ();
+void bench_timer_start() {
+    bench_t_start = rtclock ();
 }
 
-void bench_timer_stop()
-{
-  bench_t_end = rtclock ();
+void bench_timer_stop() {
+    bench_t_end = rtclock ();
 }
 
-void bench_timer_print()
-{
-  printf ("Time in seconds = %0.6lf\n", bench_t_end - bench_t_start);
+void bench_timer_print() {
+    printf ("Time in seconds = %0.6lf\n", bench_t_end - bench_t_start);
 }
 
-static
-void init_array (int n,
-   float A[ n][n])
-{
-  int i, j;
+static void init_array (int n, float A[ n][n]) {
+    int i, j;
 
-  for (i = 0; i < n; i++)
-    for (j = 0; j < n; j++)
-      A[i][j] = ((float) i*(j+2) + 2) / n;
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++)
+            A[i][j] = ((float) i*(j+2) + 2) / n;
 }
 
-static
-void print_array(int n,
-   float A[ n][n])
-{
-  int i, j;
+static void print_array(int n, float A[ n][n]) {
+    int i, j;
 
-  fprintf(stderr, "==BEGIN DUMP_ARRAYS==\n");
-  fprintf(stderr, "begin dump: %s", "A");
-  for (i = 0; i < n; i++)
-    for (j = 0; j < n; j++) {
-      if ((i * n + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf(stderr, "%0.2f ", A[i][j]);
-    }
-  fprintf(stderr, "\nend   dump: %s\n", "A");
-  fprintf(stderr, "==END   DUMP_ARRAYS==\n");
+    fprintf(stderr, "==BEGIN DUMP_ARRAYS==\n");
+    fprintf(stderr, "begin dump: %s", "A");
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++) {
+            if ((i * n + j) % 20 == 0) fprintf(stderr, "\n");
+            fprintf(stderr, "%0.2f ", A[i][j]);
+        }
+    fprintf(stderr, "\nend   dump: %s\n", "A");
+    fprintf(stderr, "==END   DUMP_ARRAYS==\n");
 }
 
-static
-void kernel_seidel_2d(int tsteps,
-        int n,
-        float A[ n][n])
-{
+static void kernel_seidel_2d(int tsteps, int n, float A[n][n]) {
+	int i, j, k, process_per_iteration, rc;
 
-	int i, j, k, process_per_iteration;
-
-	MPI_Comm_size(MPI_COMM_WORLD, &ranksize);
+    MPI_Comm_size(MPI_COMM_WORLD, &ranksize);
     MPI_Comm_rank(MPI_COMM_WORLD, &id);
-	MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
 
 	int iterations = (tsteps % ranksize ==0) ? (int)(tsteps / ranksize) : (int)(tsteps / ranksize + 1);
 
@@ -109,27 +93,27 @@ void kernel_seidel_2d(int tsteps,
 
 int main(int argc, char** argv)
 {
-  int n = N;
-  int tsteps = TSTEPS;
+    int n = N;
+    int tsteps = TSTEPS;
 
-  MPI_Init(&argc, &argv);
+    MPI_Init(&argc, &argv);
 
-  float (*A)[n][n]; A = (float(*)[n][n])malloc ((n) * (n) * sizeof(float));;
+    float (*A)[n][n]; A = (float(*)[n][n])malloc ((n) * (n) * sizeof(float));;
 
-  init_array (n, *A);
+    init_array (n, *A);
 
-  bench_timer_start();;
+    bench_timer_start();;
 
-  kernel_seidel_2d (tsteps, n, *A);
+    kernel_seidel_2d (tsteps, n, *A);
 
-  bench_timer_stop();;
-  bench_timer_print();;
+    bench_timer_stop();;
+    bench_timer_print();;
 
-  if (argc > 42 && ! strcmp(argv[0], "")) print_array(n, *A);
+    if (argc > 42 && ! strcmp(argv[0], "")) print_array(n, *A);
 
-  free((void*)A);;
+    free((void*)A);;
 
-  MPI_Finalize();
+    MPI_Finalize();
 
-  return 0;
+    return 0;
 }

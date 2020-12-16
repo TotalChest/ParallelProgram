@@ -1,7 +1,7 @@
 //#define MINI_DATASET
 //#define SMALL_DATASET
-//#define MEDIUM_DATASET
-#define LARGE_DATASET
+#define MEDIUM_DATASET
+//#define LARGE_DATASET
 //#define EXTRALARGE_DATASET
 
 #ifndef _SEIDEL_2D_H
